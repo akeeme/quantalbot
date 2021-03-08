@@ -1,5 +1,5 @@
 # quantalbot
-!(imgur)[https://imgur.com/a/cYbFfQH]
+!(image)[https://imgur.com/a/cYbFfQH]
 
 
 bot uses 3 api's, 2 different yahoo finance api's and discord api to retrieve stock information and send it to user
