@@ -1,5 +1,5 @@
 # quantalbot
-
+<blockquote class="imgur-embed-pub" lang="en" data-id="a/cYbFfQH"  ><a href="//imgur.com/a/cYbFfQH">quantal gif</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
 bot uses 3 api's, 2 different yahoo finance api's and discord api to retrieve stock information and send it to user
 currently with the list of commands the only argument it accepts is the ticker of the stock you'd like to retrieve information for.
 
