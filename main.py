@@ -1,5 +1,5 @@
 import discord
-from discord.ext import commands
+# from discord.ext import commands
 import os
 import yfinance as yf
 import asyncio
@@ -7,10 +7,26 @@ from datetime import date
 import requests
 import numpy as np
 
+''' 
+        necessary params to access
+        discord bot api and other api's
+
+'''
+
+
 token = os.getenv('token')
 rKey = os.getenv('rKey')
 rHost = os.getenv('rHost')
 
+
+
+''' 
+
+        class for discord client
+        found this way easier than using bot or regular
+        client commands (might change later for optimal bot performance)
+
+'''
 
 class MyClient(discord.Client):
     async def on_ready(self):
@@ -18,12 +34,34 @@ class MyClient(discord.Client):
         print('Logged in as', client.user.name)
 
     
+    ''' 
+
+        a single async function for all commands
+        still figuring out discord api :(
+
+    '''
+
+
     async def on_message(self, message: discord.message.Message):
-      
 
         if message.author.id != client.user.id:
 
+          ''' 
+
+              first command $stock takes in a ticker
+              then uses yfinance api to return dailyhigh,
+              dailylow, and previous close
+
+              other returns are for the discord embed method
+
+              try except is to catch errors, an error would be
+              an invalid ticker, instead of returning error to console it
+              catches error and returns a message for the user to try again
+
+          '''
+
           try:
+
             if message.content.startswith('$stock'):
               await message.channel.trigger_typing()
               stock = message.content.split(' ')[1].upper()
@@ -47,14 +85,19 @@ class MyClient(discord.Client):
 
 
               await message.channel.send(embed = embed)
+
           except (ImportError, KeyError):
 
             embedError=discord.Embed(color=discord.Color.purple())
             embedError.add_field(name="Error", value="Invalid Ticker, try again")
-            
             await message.channel.send(embed = embedError)
-
           
+          ''' 
+
+              second command $split takes in ticker
+              and returns all splits for the ticker
+
+          '''
 
           try:
               
@@ -80,11 +123,22 @@ class MyClient(discord.Client):
 
             embedError=discord.Embed(color=discord.Color.purple())
             embedError.add_field(name="Error", value="Invalid Ticker, try again")
-            
             await message.channel.send(embed = embedError)
-          
-          # dividends not working right now (api's fault)
 
+
+          
+
+          ''' 
+
+              third command dividends will take in
+              a ticker then return the dividends for
+              the ticker
+
+              currently the first api does not work well
+              with retreiving calls from yahoo finance for
+              stock dividends, command still in working progress
+
+          '''
 
           # if message.content.startswith('$div'):
           #   stock = message.content.split(' ')[1].upper()
@@ -102,20 +156,30 @@ class MyClient(discord.Client):
           #   embed.set_author(name = f"{s_name}", url = f"{s_url}", icon_url = f"{s_logo}")
           #   embed.add_field(name = "**Dividends**", value = f"{div}")
 
+
+          ''' 
+
+              fourth command $trend returns the current
+              trending stocks according to yfinance
+
+              later it will also automatically send
+              trending tickers to server 3 times a day
+
+          '''
+
           try:
 
             if message.content.startswith('$trend'):
               await message.channel.trigger_typing()
               url="https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/get-trending-tickers"
 
-
-              querystring = {"region":"US"}
+              querystring = {"region":"US"}   
               
-            
               headers = {
                 'x-rapidapi-key': rKey,
                 'x-rapidapi-host': rHost
         }
+              
               response = requests.request("GET", url, headers=headers, params=querystring)
 
               r2 = response.json()
@@ -187,9 +251,21 @@ class MyClient(discord.Client):
             await message.channel.send(embed = embedError)
 
 
-          #if the message starts with something from the list command_list aka starts with $help or $command then execute code
+          
+          ''' 
+          
+              fifth command will accept inputs
+              from the command list then return
+              the available commands and what they do
+
+              this command is still in the works currently
+              i have to hard code every command and it's functionality
+              to be returned to the user
+
+          '''
 
           #.startswith is not a discord function its a python built in funciton
+
           command_list = ['$help', '$commands'] #this list
 
           if message.content.startswith(tuple(command_list)):
@@ -199,7 +275,21 @@ class MyClient(discord.Client):
               description = "$s (ticker) - gives the Day high and Day low for a stock**" + "\n \n" + "**$help or $commands - gives list of commands",
               color = discord.Color.purple())
             await message.channel.send (embed = embed)
+          
 
+
+          ''' 
+          
+              my favorite command and the command that took the most out of me
+              sixth command $chart takes in a ticker and returns the current
+              chart for the ticker
+              
+              no api worked well with charts so i decided to pull some tricks
+              out my sleeve
+
+              works well for now
+
+          '''
           
 
           try:
@@ -225,9 +315,6 @@ class MyClient(discord.Client):
             embedError.add_field(name="Error", value="Invalid Ticker, try again")
             
             await message.channel.send(embed = embedError)
-
-
-
 
 client = MyClient()
 client.run(token)
