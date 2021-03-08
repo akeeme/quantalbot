@@ -1,5 +1,5 @@
 # quantalbot
-https://twitter.com/i/status/1357196050130489345
+
 bot uses 3 api's, 2 different yahoo finance api's and discord api to retrieve stock information and send it to user
 currently with the list of commands the only argument it accepts is the ticker of the stock you'd like to retrieve information for.
 
