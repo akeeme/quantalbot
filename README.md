@@ -1,5 +1,5 @@
 # quantalbot
-![Imgur Gif](https://imgur.com/a/cYbFfQH.gif)
+![](https://imgur.com/a/cYbFfQH.gif)
 
 
 
